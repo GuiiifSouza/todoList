@@ -20,8 +20,14 @@ app.use(limiter);
 // Log requests to access.log
 const logDate = moment().format('YYYY-MM-DD');
 const logFileName = `access-${logDate}.log`;
-const logFilePath = path.join(__dirname, 'logs', logFileName);
+const logsDirectory = path.join(__dirname, 'logs');
 
+// Create logs directory if it doesn't exist
+if (!fs.existsSync(logsDirectory)) {
+  fs.mkdirSync(logsDirectory);
+}
+
+const logFilePath = path.join(__dirname, 'logs', logFileName);
 const accessLogStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 
 app.use(morgan('combined', { stream: accessLogStream }));
